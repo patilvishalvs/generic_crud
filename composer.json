@@ -1,0 +1,24 @@
+{
+    "name": "patilvishalvs/generic_crud",
+    "description": "A generic crud for MVC in laravel",
+    "authors": [
+        {
+            "name": "Vishal Patil",
+            "email": "patilvishalvs@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "PatilVishalVS\\GenericCRUD\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PatilVishalVS\\GenericCRUD\\GenericCRUDServiceProvider"
+            ]
+        }
+    }
+}

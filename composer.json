@@ -7,8 +7,11 @@
             "email": "patilvishalvs@gmail.com"
         }
     ],
+    "require": {
+      "laravelcollective/html": "^5.8.0"
+    },
     "minimum-stability": "dev",
-    "require": {},
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "PatilVishalVS\\GenericCRUD\\": "src/"

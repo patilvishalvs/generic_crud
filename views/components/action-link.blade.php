@@ -1,0 +1,1 @@
+<a href="{{ route($route, $params) }}" class="btn {{ $class }}" title="{{ $title }}">{{ $title }}</a>

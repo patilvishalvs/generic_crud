@@ -1,0 +1,10 @@
+h1.page-header {
+    font-weight: bold;
+    font-size: 1.5rem;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+.pagination {
+   justify-content: center;
+}

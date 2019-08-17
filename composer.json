@@ -12,6 +12,7 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "PatilVishalVS\\GenericCRUD\\": "src/"

@@ -1,7 +1,9 @@
 #Installation
 
 Create new Laravel Project
-`laravel new <project_name>`
+```
+laravel new <project_name>
+```
 
 Update default string length in AppServiceProvider.php:
 

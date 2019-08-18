@@ -11,7 +11,9 @@ class Role extends Model
       'slug',
     ];
     
+    public $timestamps = false;
+    
     public function permissions() {
-      return $this->belongsToMany(Permission::class, 'role_permissions');
+      return $this->belongsToMany(Permission::class, 'roles_permissions');
     }
 }

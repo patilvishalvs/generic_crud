@@ -1,6 +1,7 @@
 <?php
-
+namespace PatilVishalVS\GenericCRUD\seeds;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UserRolesPermissionsTableSeeder extends Seeder {
 
@@ -10,11 +11,14 @@ class UserRolesPermissionsTableSeeder extends Seeder {
    * @return void
    */
   public function run() {
-    DB::table('role_permissions')->insert([
+    // Administrator Permissions
+    DB::table('roles_permissions')->insert([
       'role_id' => 1,
       'permission_id' => 1,
     ]);
-    DB::table('user_roles')->insert([
+
+    // Administrator Role
+    DB::table('users_roles')->insert([
       'role_id' => 1,
       'user_id' => 1,
     ]);

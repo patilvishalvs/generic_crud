@@ -1,6 +1,7 @@
 <?php
-
+namespace PatilVishalVS\GenericCRUD\seeds;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UsersTableSeeder extends Seeder {
 
@@ -10,7 +11,7 @@ class UsersTableSeeder extends Seeder {
    * @return void
    */
   public function run() {
-    \App\User::insert([
+    DB::table('users')->insert([
       'id' => 1,
       'name' => 'Administrator',
       'email' => 'admin@localhost',

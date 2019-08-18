@@ -10,6 +10,7 @@ class PermissionController extends GenericController
       $this->route = 'permissions';
       $this->singular_name = 'Permission';
       $this->plural_name = 'Permissions';
+      $this->model_label = 'name';
       $this->model = 'PatilVishalVS\GenericCRUD\Models\Permission';
       $this->fields_config = [
         'datagrid' => [
@@ -17,8 +18,30 @@ class PermissionController extends GenericController
             'name' => 'Name',
             'name' => 'Name',
             'slug' => 'Slug',
-          ]
-        ]
+          ],
+        ],
+      'form_fields' => [
+        'name' => [
+          'label' => 'Name',
+          'type' => 'text',
+          'attributes' => [
+            'id' => 'edit-name',
+            'class' => 'form-control',
+            'placeholder' => 'Enter name...',
+          ],
+          'validate' => 'required',
+        ],
+        'slug' => [
+          'label' => 'Slug',
+          'type' => 'text',
+          'attributes' => [
+            'id' => 'edit-slug',
+            'class' => 'form-control',
+            'placeholder' => 'Enter slug...',
+          ],
+          'validate' => 'required|regex:/^[a-z0-9_\.]+$/',
+        ],
+      ],
       ];
     }
 }

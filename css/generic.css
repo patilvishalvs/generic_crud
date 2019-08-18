@@ -8,3 +8,12 @@ h1.page-header {
 .pagination {
    justify-content: center;
 }
+.control-label{
+  font-weight: bold
+}
+.control-label.required:after {
+  content: "*";
+  color: red;
+  margin-left: 3px;
+  font-size: 80%;
+}

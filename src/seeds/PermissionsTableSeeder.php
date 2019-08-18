@@ -1,6 +1,7 @@
 <?php
-
+namespace PatilVishalVS\GenericCRUD\seeds;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PermissionsTableSeeder extends Seeder {
 
@@ -13,7 +14,7 @@ class PermissionsTableSeeder extends Seeder {
     DB::table('permissions')->insert([
       'id' => 1,
       'name' => 'Administer Application Configuration',
-      'slug' => 'administer_application_configuration',
+      'slug' => 'admin.app.config',
     ]);
   }
 

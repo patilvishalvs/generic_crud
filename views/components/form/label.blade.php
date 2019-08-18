@@ -1,0 +1,1 @@
+{{ Form::label($field['attributes']['id'], $field['label'], ['class' => "control-label {$field['label_attributes']['class']}"]) }}

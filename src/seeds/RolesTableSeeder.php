@@ -1,6 +1,7 @@
 <?php
-
+namespace PatilVishalVS\GenericCRUD\seeds;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class RolesTableSeeder extends Seeder {
 
@@ -14,11 +15,6 @@ class RolesTableSeeder extends Seeder {
       'id' => 1,
       'name' => 'Administrator',
       'slug' => 'administrator',
-    ]);
-    DB::table('roles')->insert([
-      'id' => 2,
-      'name' => 'Authenticated',
-      'slug' => 'authenticated',
     ]);
   }
 

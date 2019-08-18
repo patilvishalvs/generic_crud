@@ -4,6 +4,7 @@ namespace PatilVishalVS\GenericCRUD\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class GenericController extends Controller {
 
@@ -12,7 +13,7 @@ class GenericController extends Controller {
   protected $singular_name;
   protected $plural_name;
   protected $model_label = 'id';
-  protected $view = 'generic';
+  protected $view = 'vendor.generic';
   protected $route;
   protected $fields_config = [];
   protected $with = [];
@@ -25,6 +26,7 @@ class GenericController extends Controller {
   public function index() {
     $records = $this->model::with($this->with)->paginate(50);
     $datagrid = $this->fields_config['datagrid'];
+    $route = $this->route;
     $datagrid['headers']['actions'] = [
       'title' => 'Actions',
       'links' => [
@@ -48,7 +50,7 @@ class GenericController extends Controller {
     $singular_name = $this->singular_name;
     $page_title = $this->plural_name;
     return view($this->view . '.index', compact(
-            'records', 'datagrid', 'singular_name', 'page_title'
+            'records', 'datagrid', 'singular_name', 'page_title', 'route'
     ));
   }
 
@@ -58,7 +60,12 @@ class GenericController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function create() {
-    
+    $this->setObject();
+    $record = $this->object;
+    $page_title = "Create {$this->singular_name}";
+    $route = $this->route;
+    $form_fields = $this->fields_config['form_fields'];
+    return view($this->view . '.create', compact('record', 'page_title', 'route', 'form_fields'));
   }
 
   /**
@@ -68,7 +75,10 @@ class GenericController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function store(Request $request) {
-    //
+    $this->save($request, 'store', false);
+    $title = $this->object[$this->model_label];
+    return redirect()->route($this->route . '.index')
+            ->with('message', $title . '(' . $this->singular_name . ') successfully added!');
   }
 
   /**
@@ -80,8 +90,9 @@ class GenericController extends Controller {
   public function show($id) {
     $this->setObject($id);
     $record = $this->object;
-    $page_title = "{$this->singular_name}: ({$this->object[$this->model_label]})";
-    return view($this->view . '.show', compact('record', 'page_title'));
+    $page_title = "{$this->singular_name}: <em>{$this->object[$this->model_label]}</em>";
+    $view_fields = $this->fields_config['view_fields'];
+    return view($this->view . '.show', compact('record', 'page_title', 'view_fields'));
   }
 
   /**
@@ -91,7 +102,18 @@ class GenericController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function edit($id) {
-    //
+    $this->setObject($id);
+    $record = $this->object;
+    $page_title = "Edit {$this->singular_name}: <em>{$this->object[$this->model_label]}</em>";
+    $route = $this->route;
+    $form_fields = $this->fields_config['form_fields'];
+    foreach($form_fields as &$form_field){
+      $form_field['label_attributes']['class'] = '';
+      if(isset($form_field['validate']) && strpos($form_field['validate'], 'required') !== false){
+        $form_field['label_attributes']['class'] = 'required';
+      }
+    }
+    return view($this->view . '.edit', compact('record', 'page_title', 'route', 'form_fields'));
   }
 
   /**
@@ -102,7 +124,33 @@ class GenericController extends Controller {
    * @return \Illuminate\Http\Response
    */
   public function update(Request $request, $id) {
-    //
+    $this->save($request, 'update', $id);
+    $title = $this->object[$this->model_label];
+    return redirect()->route($this->route . '.index')
+            ->with('message', $title . '(' . $this->singular_name . ') successfully updated!');
+  }
+  
+  protected function save(Request $request, $method, $id = false){
+    $this->setObject($id);
+    $except = array_merge(['_token'], $this->with);
+    
+    $validate = [];
+    foreach($this->fields_config['form_fields'] as $field_name => $field){
+      if(isset($field['validate'])){
+        $validate[$field_name] = is_array($field['validate']) ? $field['validate'][$method] : $field['validate'];
+        if(strpos($validate[$field_name], 'nullable') !== false && empty($request->input($field_name))){
+          $except[] = $field_name;
+        }
+      }
+    }
+    $request->validate($validate);
+    
+    $fill = $request->except($except);
+    $this->object->fill($fill)->save();
+    foreach($this->with as $with){
+      $with_values = $request->input($with);
+      $this->object->$with()->sync($with_values);
+    }
   }
 
   /**
@@ -116,12 +164,12 @@ class GenericController extends Controller {
     $title = $this->object[$this->model_label];
     $this->object->delete();
     return redirect()->route($this->route . '.index')
-            ->with('message', $this->singular_name . '(' . $title . ') successfully deleted!');
+            ->with('message', $title . '(' . $this->singular_name . ') successfully deleted!');
   }
 
   public function delete($id) {
     $this->setObject($id);
-    $page_title = "{$this->singular_name}: ({$this->object[$this->model_label]})";
+    $page_title = "{$this->singular_name}: <em>{$this->object[$this->model_label]}</em>";
     $route = $this->route;
     return view($this->view . '.delete', compact('id', 'page_title', 'route'));
   }

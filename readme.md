@@ -1,3 +1,6 @@
+#Installation
+
+Create new Laravel Project
 `laravel new <project_name>`
 
 Update default string length in AppServiceProvider.php:
@@ -13,6 +16,8 @@ public function boot()
     Schema::defaultStringLength(191);
 }
 ```
+
+Migrate database and enable auth
 ```
 php artisan migrate
 php artisan make:auth
@@ -37,6 +42,7 @@ protected $routeMiddleware = [
 ];
 ```
 
+Seed and Publish vendor resources and assets then serve
 ```
 php artisan db:seed --class="PatilVishalVS\GenericCRUD\seeds\DatabaseSeeder"
 php artisan vendor:publish --tag=public

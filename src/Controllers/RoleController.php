@@ -20,10 +20,26 @@ class RoleController extends GenericController {
         'headers' => [
           'name' => 'Name',
           'slug' => 'Slug',
+        ],
+        'filters' => [
+          'name' => [
+            'label' => 'Name',
+            'type' => 'text',
+            'attributes' => [
+              'id' => 'filter-name',
+              'class' => 'form-control',
+              'placeholder' => 'Enter name...',
+            ],
+          ],
           'permissions' => [
-            'title' => 'Permissions',
-            'template' => 'vendor.generic.components.list',
-            'column' => 'name',
+            'label' => 'Permissions',
+            'type' => 'select',
+            'options' => $premissions,
+            'attributes' => [
+              'id' => 'filter-permissions',
+              'class' => 'form-control',
+              'placeholder' => '- Select Permission -',
+            ],
           ],
         ],
       ],
@@ -53,6 +69,15 @@ class RoleController extends GenericController {
           'type' => 'checkboxes',
           'options' => $premissions,
           'validate' => 'required',
+        ],
+      ],
+      'view_fields' => [
+        'name' => 'Name',
+        'slug' => 'Slug',
+        'permissions' => [
+          'title' => 'Permissions',
+          'template' => 'vendor.generic.components.list',
+          'column' => 'name',
         ],
       ],
     ];

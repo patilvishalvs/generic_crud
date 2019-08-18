@@ -23,35 +23,50 @@ class GenericController extends Controller {
    *
    * @return \Illuminate\Http\Response
    */
-  public function index() {
-    $records = $this->model::with($this->with)->paginate(50);
-    $datagrid = $this->fields_config['datagrid'];
+  public function index(Request $request) {
     $route = $this->route;
+    $datagrid = $this->fields_config['datagrid'];
     $datagrid['headers']['actions'] = [
       'title' => 'Actions',
       'links' => [
         'show' => [
           'class' => 'btn-sm btn-info',
           'title' => 'View',
-          'route' => $this->route . '.show',
+          'route' => $route . '.show',
         ],
         'edit' => [
           'class' => 'btn-sm btn-primary',
           'title' => 'Edit',
-          'route' => $this->route . '.edit',
+          'route' => $route . '.edit',
         ],
         'delete' => [
           'class' => 'btn-sm btn-danger',
           'title' => 'Delete',
-          'route' => $this->route . '.delete',
+          'route' => $route . '.delete',
         ],
       ]
     ];
     $singular_name = $this->singular_name;
     $page_title = $this->plural_name;
+    $result = $this->filter($request, $datagrid);
+    extract($result);
     return view($this->view . '.index', compact(
-            'records', 'datagrid', 'singular_name', 'page_title', 'route'
+            'records', 'datagrid', 'singular_name', 'page_title', 'route', 'filters'
     ));
+  }
+  
+  protected function filter(Request $request, $datagrid){
+    $filters = [];
+    $records = $this->model::with($this->with);
+    foreach($datagrid['filters'] as $filter_name => $filter){
+      if ($request->has($filter_name)) {
+        $search_method = 'search'.ucfirst($filter_name);
+        $records->$search_method($request->input($filter_name));
+      }
+    }
+    $filters = $request->only(array_keys($datagrid['filters']));
+    $records = $records->orderBy('id', 'DESC')->paginate(50);
+    return ['records' => $records, 'filters' => $filters];
   }
 
   /**
@@ -64,7 +79,7 @@ class GenericController extends Controller {
     $record = $this->object;
     $page_title = "Create {$this->singular_name}";
     $route = $this->route;
-    $form_fields = $this->fields_config['form_fields'];
+    $form_fields = $this->setLabelClass($this->fields_config['form_fields']); 
     return view($this->view . '.create', compact('record', 'page_title', 'route', 'form_fields'));
   }
 
@@ -106,13 +121,7 @@ class GenericController extends Controller {
     $record = $this->object;
     $page_title = "Edit {$this->singular_name}: <em>{$this->object[$this->model_label]}</em>";
     $route = $this->route;
-    $form_fields = $this->fields_config['form_fields'];
-    foreach($form_fields as &$form_field){
-      $form_field['label_attributes']['class'] = '';
-      if(isset($form_field['validate']) && strpos($form_field['validate'], 'required') !== false){
-        $form_field['label_attributes']['class'] = 'required';
-      }
-    }
+    $form_fields = $this->setLabelClass($this->fields_config['form_fields'], 'update');    
     return view($this->view . '.edit', compact('record', 'page_title', 'route', 'form_fields'));
   }
 
@@ -184,4 +193,16 @@ class GenericController extends Controller {
     }
   }
 
+  protected function setLabelClass($form_fields, $method = 'store'){
+    foreach($form_fields as &$form_field){
+      $form_field['label_attributes']['class'] = '';
+      if(isset($form_field['validate'])){
+        $form_field['validate'] = is_array($form_field['validate']) ? $form_field['validate'][$method] : $form_field['validate'];
+        if(isset($form_field['validate']) && strpos($form_field['validate'], 'required') !== false){
+          $form_field['label_attributes']['class'] = 'required';
+        }
+      }
+    }
+    return $form_fields;
+  }
 }

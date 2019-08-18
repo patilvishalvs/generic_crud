@@ -3,7 +3,7 @@
 {!! $page_title !!}
 @endsection
 @section('content')
-{!! Form::model($record, ['route' => $route.'.index']) !!}
+{!! Form::model($record, ['route' => $route.'.store']) !!}
     @include('vendor.generic.form', [
       'record' => $record,
       'form_fields' => $form_fields,

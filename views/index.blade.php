@@ -14,13 +14,13 @@
   <em> {!! session('message') !!}</em>
 </div>
 @endif 
-
+@include('vendor.generic.form-filters')
 <div class="table-responsive">
   <table class="table table-striped table-bordered" id="data-tables">
     <thead>
       <tr>
         @foreach($datagrid['headers'] as $col => $header)
-        <th>{{ $header['title'] ?? $header }}</th>
+        <th @if($col == 'actions') width="180" @endif>{{ $header['title'] ?? $header }}</th>
         @endforeach
       </tr>
     </thead>
@@ -59,6 +59,6 @@
   </table>
 </div>
 <div class="text-right">
-  {{ $records->links() }}
+  {{ $records->appends($filters)->links() }}
 </div>
 @endsection

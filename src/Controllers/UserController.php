@@ -28,6 +28,37 @@ class UserController extends GenericController {
           'created_at' => 'Created At',
           'updated_at' => 'Updated At',
         ],
+        'filters' => [
+          'name' => [
+            'label' => 'Name',
+            'type' => 'text',
+            'attributes' => [
+              'id' => 'filter-name',
+              'class' => 'form-control',
+              'placeholder' => 'Enter name...',
+            ],
+          ],
+          'email' => [
+            'label' => 'Email',
+            'type' => 'email',
+            'attributes' => [
+              'id' => 'filter-email',
+              'class' => 'form-control',
+              'placeholder' => 'Enter email...',
+            ],
+            'validate' => 'email',
+          ],          
+          'roles' => [
+            'label' => 'Roles',
+            'type' => 'select',
+            'options' => $roles,
+            'attributes' => [
+              'id' => 'filter-roles',
+              'class' => 'form-control',
+              'placeholder' => '- Select Role -',
+            ],
+          ],
+        ],
       ],
       'form_fields' => [
         'name' => [

@@ -5,6 +5,11 @@ Create new Laravel Project
 laravel new <project_name>
 ```
 
+Install package
+```
+composer require patilvishalvs/generic_crud
+```
+
 Update default string length in AppServiceProvider.php:
 
 ```

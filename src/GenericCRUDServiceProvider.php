@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use PatilVishalVS\GenericCRUD\ResourceRegistrar;
 use Illuminate\Support\Facades\Gate;
 use PatilVishalVS\GenericCRUD\Models\Permission;
+use Illuminate\Support\Facades\Schema;
 
 class GenericCRUDServiceProvider extends ServiceProvider {
 
@@ -48,11 +49,13 @@ class GenericCRUDServiceProvider extends ServiceProvider {
       $package_dir . $DS . '/css' => public_path('vendor/generic/css'),
         ], 'public');
 
-    Permission::get()->map(function($permission) {
-          Gate::define($permission->slug, function($user) use ($permission) {
-                return $user->hasPermissionThroughRole($permission);
-              });
-        });
+    if(Schema::hasTable('permissions')){
+      Permission::get()->map(function($permission) {
+        Gate::define($permission->slug, function($user) use ($permission) {
+              return $user->hasPermissionThroughRole($permission);
+            });
+      });
+    }
   }
 
 }
